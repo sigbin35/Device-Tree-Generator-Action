@@ -16,7 +16,7 @@ to find ur device firmware check out this website: https://dumps.tadiphone.dev/d
 
 3) click on "Device-Tree-Generator" (on left side)
 
-4) click on "Run workflow"
+4) click on "Run workflow" (on right side)
 
 5) add your img file link
 
