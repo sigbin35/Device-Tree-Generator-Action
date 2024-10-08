@@ -1,0 +1,63 @@
+name: Device-Tree-Generator
+
+on:
+  workflow_dispatch:
+    inputs:
+      DEVICE_IMG:
+        description: 'IMG link'
+        required: true
+        default: 'https://dumps.tadiphone.dev/dumps/samsung/a05s/-/raw/a05snsdxx-user-14-UP1A.231005.007-A057FXXS5CXH9-release-keys/recovery.img'
+      IMG_TYPE:
+        description: 'your img type'
+        required: true
+        default: 'recovery'
+        type: choice
+        options:
+        - boot
+        - recovery
+        - vendor_boot
+
+jobs:
+  build:
+    name: Device Tree Generator by ${{ github.actor }}
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Getting tools ready 
+      run: |
+        pip3 install twrpdtgen 
+        sudo apt-get install cpio
+    
+    - name: Downloading .img file
+      run: |
+        wget ${{ github.event.inputs.DEVICE_IMG }}
+        
+    - name: Generating Device tree
+      run: |
+        python3 -m twrpdtgen ./${{ github.event.inputs.IMG_TYPE }}.img 
+        
+    - name: Set Build Date 
+      run: |
+        echo "BUILD_DATE=$(date +%Y%m%d)" >> $GITHUB_ENV
+
+    - name: Add to Zip
+      run: |
+          mv ./output/ device
+          zip -r ${{ github.event.inputs.IMG_TYPE }}_tree.zip ./device/
+        
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ${{ github.event.inputs.IMG_TYPE }}_tree.zip
+        name: device tree // ${{ env.BUILD_DATE }}
+        tag_name: ${{ github.run_id }}
+        body: |
+ 
