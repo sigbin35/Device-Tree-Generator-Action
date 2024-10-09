@@ -71,14 +71,14 @@ jobs:
     - name: Add to Zip
       run: |
           mv ./output/ device
-          zip -r tree.zip ./device/
+          zip -r ${{ github.event.inputs.IMG_TYPE }}_tree.zip ./device/
         
     - name: Release
       if: github.event.inputs.RELEASE_FILE == 'true'
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          tree.zip
+          ${{ github.event.inputs.IMG_TYPE }}_tree.zip
         name: device tree // ${{ env.BUILD_DATE }}
         tag_name: ${{ github.run_id }}
         body: |
