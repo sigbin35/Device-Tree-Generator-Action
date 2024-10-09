@@ -1,9 +1,8 @@
 # Recovery-Tree-Generator-Action
 ```
-Recovery Tree Generator Action
-guys this is Prototype version.
-in next version I'll add direct pushing to your github.
-thx.
+- Direct Push to GitHub
+- your GitHub Access token will be hidden!!!!
+- super fast
 ```
 
 to find ur device firmware check out this website: https://dumps.tadiphone.dev/dumps
