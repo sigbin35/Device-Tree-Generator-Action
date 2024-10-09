@@ -7,6 +7,22 @@ on:
         description: 'IMG link'
         required: true
         default: 'https://dumps.tadiphone.dev/dumps/samsung/a05s/-/raw/a05snsdxx-user-14-UP1A.231005.007-A057FXXS5CXH9-release-keys/recovery.img'
+      DEVICE_BRANCH:
+        description: 'your device branch name'
+        required: true
+        default: 'android-12.1'
+      GITHUB_TOKEN:
+        description: 'your github Access token'
+        required: true
+        default: 'XXXXXXXXXXXXXXXXXXXXXXXXXX'
+      EMPTY_REPO:
+        description: 'your empty repo name on github'
+        required: true
+        default: 'android_device_samsung_a05s.git'
+      COMMIT_MESSAGE:
+        description: 'your commit message'
+        required: true
+        default: 'TWRP device tree'
       IMG_TYPE:
         description: 'your img type'
         required: true
@@ -16,6 +32,11 @@ on:
         - boot
         - recovery
         - vendor_boot
+      RELEASE_FILE:
+        description: 'Upload file to GitHub Release too.'
+        type: boolean
+        required: true
+        default: true
 
 jobs:
   build:
@@ -50,14 +71,27 @@ jobs:
     - name: Add to Zip
       run: |
           mv ./output/ device
-          zip -r ${{ github.event.inputs.IMG_TYPE }}_tree.zip ./device/
+          zip -r tree.zip ./device/
         
     - name: Release
+      if: github.event.inputs.RELEASE_FILE == 'true'
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          ${{ github.event.inputs.IMG_TYPE }}_tree.zip
+          tree.zip
         name: device tree // ${{ env.BUILD_DATE }}
         tag_name: ${{ github.run_id }}
         body: |
- 
+
+    - name: Push to GitHub
+      run: |
+          git config --global user.email "Samuel Kendall"
+          git config --global user.name "kinguser981@gmail.com"
+          cd ./device/*/*/
+          git init
+          git add *
+          git commit -m "${{ github.event.inputs.COMMIT_MESSAGE }}"
+          git branch -M ${{ github.event.inputs.DEVICE_BRANCH }}
+          git remote add origin git@github.com:${{ github.actor }}/${{ github.event.inputs.EMPTY_REPO }}
+          git remote set-url origin https://${{ github.actor }}:${{ github.event.inputs.GITHUB_TOKEN }}@github.com/${{ github.actor }}/${{ github.event.inputs.EMPTY_REPO }}
+          git push -u origin ${{ github.event.inputs.DEVICE_BRANCH }}
