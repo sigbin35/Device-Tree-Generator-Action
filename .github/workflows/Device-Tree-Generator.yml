@@ -23,15 +23,11 @@ on:
         description: 'your commit message'
         required: true
         default: 'TWRP device tree'
-      IMG_TYPE:
-        description: 'your img type'
+      PUSH_GITHUB:
+        description: 'Push to GitHub Repository.'
+        type: boolean
         required: true
-        default: 'recovery'
-        type: choice
-        options:
-        - boot
-        - recovery
-        - vendor_boot
+        default: false
       RELEASE_FILE:
         description: 'Upload file to GitHub Release too.'
         type: boolean
@@ -59,23 +55,40 @@ jobs:
     - name: Downloading .img file
       run: |
         wget ${{ github.event.inputs.DEVICE_IMG }}
+        if [ -f ./recovery.img ]; then
+            echo "RECOVERY_TYPE=recovery" >> $GITHUB_ENV
+            echo "recovery.img file found!"
+        elif [ -f ./boot.img ]; then
+            echo "RECOVERY_TYPE=boot" >> $GITHUB_ENV
+            echo "boot.img file found!"
+        elif [ -f ./vendor_boot.img ]; then
+            echo "RECOVERY_TYPE=vendor_boot" >> $GITHUB_ENV
+            echo "vendor_boot.img file found!"
+        else
+            echo "No Recovery file found!"
+            cd Exit
+        fi
         
     - name: Generating Device tree
       run: |
-        python3 -m twrpdtgen ./${{ github.event.inputs.IMG_TYPE }}.img 
+        python3 -m twrpdtgen ./${{ env.RECOVERY_TYPE }}.img 
         
     - name: Set Build Date 
       run: |
         echo "BUILD_DATE=$(date +%Y%m%d)" >> $GITHUB_ENV
 
-    - name: Add to Zip
+    - name: getting device information 
       run: |
           mv ./output/ device
-          zip -r ${{ env.DEVICE_ID }}_${{ env.DEVICE_IDD }}_tree.zip ./device/
           cd device/*/
           echo "DEVICE_ID=${PWD##*/}" >> $GITHUB_ENV
           cd *
           echo "DEVICE_IDD=${PWD##*/}" >> $GITHUB_ENV
+
+    - name: Add to Zip
+      run: |
+          zip -r ${{ env.DEVICE_ID }}_${{ env.DEVICE_IDD }}_tree.zip ./device/
+          
     - name: Release
       if: github.event.inputs.RELEASE_FILE == 'true'
       uses: softprops/action-gh-release@v1
@@ -87,6 +100,7 @@ jobs:
         body: |
 
     - name: Push to GitHub
+      if: github.event.inputs.PUSH_GITHUB == 'true'
       run: |
           git config --global user.email "Samuel Kendall"
           git config --global user.name "kinguser981@gmail.com"
