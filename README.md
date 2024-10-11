@@ -20,7 +20,7 @@ to find ur device firmware check out this website: https://dumps.tadiphone.dev/d
 
 5) add your img file link
 
-6) if u Wanna Push it to ur GitHub too, create a "New repository" (smt like this name "android_device_samsung_a05s") without README.md file and Add ur GitHub Access token.
+6) if u Wanna Push it to ur GitHub too, create a "New repository" (smt like this name "android_device_samsung_a05s") without README.md file. then Add ur GitHub Access token.
 
 7) click on "Run workflow"
 
