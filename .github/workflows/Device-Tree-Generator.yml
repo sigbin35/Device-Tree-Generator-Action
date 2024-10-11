@@ -71,7 +71,7 @@ jobs:
     - name: Add to Zip
       run: |
           mv ./output/ device
-          zip -r ${{ github.event.inputs.IMG_TYPE }}_tree.zip ./device/
+          zip -r ${{ env.DEVICE_ID }}_${{ env.DEVICE_IDD }}_tree.zip ./device/
           cd device/*/
           echo "DEVICE_ID=${PWD##*/}" >> $GITHUB_ENV
           cd *
@@ -81,7 +81,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          ${{ github.event.inputs.IMG_TYPE }}_tree.zip
+          ${{ env.DEVICE_ID }}_${{ env.DEVICE_IDD }}_tree.zip
         name: ${{ env.DEVICE_ID }} ${{ env.DEVICE_IDD }} device tree // ${{ env.BUILD_DATE }}
         tag_name: ${{ github.run_id }}
         body: |
