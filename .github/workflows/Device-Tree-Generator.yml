@@ -72,14 +72,17 @@ jobs:
       run: |
           mv ./output/ device
           zip -r ${{ github.event.inputs.IMG_TYPE }}_tree.zip ./device/
-        
+          cd device/*/
+          echo "DEVICE_ID=${PWD##*/}" >> $GITHUB_ENV
+          cd *
+          echo "DEVICE_IDD=${PWD##*/}" >> $GITHUB_ENV
     - name: Release
       if: github.event.inputs.RELEASE_FILE == 'true'
       uses: softprops/action-gh-release@v1
       with:
         files: |
           ${{ github.event.inputs.IMG_TYPE }}_tree.zip
-        name: device tree // ${{ env.BUILD_DATE }}
+        name: ${{ env.DEVICE_ID }} ${{ env.DEVICE_IDD }} device tree // ${{ env.BUILD_DATE }}
         tag_name: ${{ github.run_id }}
         body: |
 
