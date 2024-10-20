@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       DEVICE_IMG:
-        description: '.img file link'
+        description: '(.img) file link'
         required: true
         default: 'https://dumps.tadiphone.dev/dumps/samsung/a05s/-/raw/a05snsdxx-user-14-UP1A.231005.007-A057FXXS5CXH9-release-keys/recovery.img'
       DEVICE_BRANCH:
