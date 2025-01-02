@@ -6,7 +6,7 @@
 - Automatic image select
 ```
 
-to find ur device firmware check out this website: https://dumps.tadiphone.dev/dumps
+To Find ur Device Firmware check out this Website: https://dumps.tadiphone.dev/dumps
 
 # how to use this???
 
