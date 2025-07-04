@@ -6,7 +6,7 @@ on:
       DEVICE_IMG:
         description: '(.img) file link'
         required: true
-        default: 'https://github.com/sigbin35/android_c2q_recovery_img/recovery.img'
+        default: 'https://github.com/sigbin35/android_c2q_recovery_img.git'
       DEVICE_BRANCH:
         description: 'your device branch name (Optional)'
         required: true
