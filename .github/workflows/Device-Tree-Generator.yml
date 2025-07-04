@@ -65,8 +65,8 @@ jobs:
             echo "RECOVERY_TYPE=vendor_boot" >> $GITHUB_ENV
             echo "vendor_boot.img file found!"
         else
-            echo "No Recovery file found!"
-            cd Exit
+            echo "Recovery file found!"
+            
         fi
         
     - name: Generating Device tree
@@ -103,7 +103,7 @@ jobs:
       if: github.event.inputs.PUSH_GITHUB == 'true'
       run: |
           git config --global user.email "sigbin35"
-          git config --global user.name "jakemercadotyl@gmail.com"
+          git config --global user.name "jakemercadoty@gmail.com"
           cd ./device/*/*/
           git init
           git add *
