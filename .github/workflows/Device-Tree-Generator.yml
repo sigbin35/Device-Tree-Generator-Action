@@ -54,7 +54,7 @@ jobs:
     
     - name: Downloading .img file
       run: |
-        wget https://github.com/sigbin35/android_c2q_recovery_img.git
+        wget https://github.com/sigbin35/android_c2q_recovery_img.git -b main
         if [ -f ./recovery.img ]; then
             echo "RECOVERY_TYPE=recovery" >> $GITHUB_ENV
             echo "recovery.img file found!"
